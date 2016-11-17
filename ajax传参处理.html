@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ajax</title>
+</head>
+<body>
+<form id='addForm' action='UserAdd.action'>
+     <label for='uname'>用户名</label>：<input type='text' name='uname' id='uname'><br>
+     <label for='mobileIpt'>手机号：</label><input type='text' name='mobileIpt' id='mobileIpt'><br>
+     <label for='birthday'>生日：</label><input type='text' name='birthday'><br>
+     <input type='button' value='提交' onclick='addUser()'>
+</form>
+	<script src="jquery-1.11.0.min.js"></script>
+	<script>
+		function addUser(){
+	        var user = {
+	            uname:$("#uname").val(),
+	            mobileIpt:$("#mobileIpt").val(),
+	            birthday:$("#birthday").val()
+	        };
+	        $.ajax({
+	            url:'do.php',
+	            data:user,
+	            type:'post',
+	            dataType:'text',
+	            success:function(msg){
+	                if(msg=='1'){
+	                    console.log('添加成功');
+	                }else{
+	                    console.log('添加失败')
+	                }
+	            }
+	             
+	        });
+
+	        console.log($('#addForm').serializeArray());
+	        //此方法返回的是JSON对象而非JSON字符串。
+	        // [
+			//     {"name":"uname","value":""},
+			//     {"name":"mobileIpt","value":""},   
+			//     {"name":"birthday","value":""}
+			// ]
+			var arr = $('#addForm').serializeArray();
+			console.log($.param(arr));
+			//uname=1&mobileIpt=2&birthday=3
+			//$.param()方法就是将json对象序列化
+			console.log($('#addForm').serialize())
+			//uname=1&mobileIpt=2&birthday=3
+			//$().serialize()方法和$().serializeArray()+$.param()方法的集合
+			var arr2 = $.param({uanme:'vic',mobileIpt:'110',birthday:'2013-11-11'});
+			console.log(arr2);
+			//uanme=vic&mobileIpt=110&birthday=2013-11-11
+		}
+	
+			//总结：
+
+			// 所以，本文要说的是，在jquery的ajax函数中，可以传入3种类型的数据
+
+			// 1.文本："uname=alice&mobileIpt=110&birthday=1983-05-12"
+
+			// 2.json对象：{uanme:'vic',mobileIpt:'110',birthday:'2013-11-11'}
+
+			// 3.json数组：
+
+			// [
+			//     {"name":"uname","value":"alice"},
+			//     {"name":"mobileIpt","value":"110"},   
+			//     {"name":"birthday","value":"2012-11-11"}
+			// ]
+			var arr3 = [
+			    {"name":"uname","value":"1"},
+			    {"name":"mobileIpt","value":"2"},   
+			    {"name":"birthday","value":"3"}
+			];
+
+			console.log($.param(arr3))//uname=1&mobileIpt=2&birthday=3
+	</script>
+</body>
+</html>
